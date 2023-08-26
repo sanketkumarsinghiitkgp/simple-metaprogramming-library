@@ -1,6 +1,6 @@
 #pragma once
 #include <cstddef>
-namespace tml
+namespace sml
 {
 	template <typename... Ts>
 	struct type_list {};

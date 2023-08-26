@@ -1,6 +1,6 @@
 #include "../src/type_list.h"
 #include <iostream>
-using namespace tml;
+using namespace sml;
 
 void testEmptyTypeList() {
 	static_assert(length<type_list<>>::value == 0, "testEmptyTypeList failed");
