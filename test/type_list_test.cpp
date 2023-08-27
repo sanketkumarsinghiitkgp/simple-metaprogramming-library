@@ -4,7 +4,6 @@ using namespace sml;
 
 void testEmptyTypeList() {
 	static_assert(length<type_list<>>::value == 0, "testEmptyTypeList failed");
-	std::cout<<"typeof(type_list<>)"<<typeid(length<type_list<>>).name()<<std::endl;
 }
 
 void testNonEmptyTypeList() {
@@ -20,9 +19,25 @@ void testAppendToTypeList() {
 	static_assert(length<ThreeLengthTypeList>::value == 3, "testAppendToTypeList failed for ThreeLengthTypeList");
 }
 
+void testFindInList() {
+	using EmptyList = type_list<>;
+	using OneLengthListContaining = type_list<int>;
+	using OneLengthListNotContaining = type_list<double>;
+	using FoundAtTheHead = type_list<int, double, float, char>;
+	using FoundAtTheEnd = type_list<double, float, char, int>;
+	using FoundInTheMiddle = type_list<double, float, int, char>;
+	static_assert(find<EmptyList, int>::value == -1, "testFindInList failed for EmptyList");
+	static_assert(find<OneLengthListContaining, int>::value == 0, "testFindInList failed for OneLengthListContaining");
+	static_assert(find<OneLengthListNotContaining, int>::value == -1, "testFindInList failed for OneLengthListNotContaining");
+	static_assert(find<FoundAtTheHead, int>::value == 0, "testFindInList failed for FoundAtTheHead");
+	static_assert(find<FoundAtTheEnd, int>::value == 3, "testFindInList failed for FoundAtTheEnd");
+	static_assert(find<FoundInTheMiddle, int>::value == 2, "testFindInList failed for FoundInTheMiddle");
+}
+
 int main()
 {
 	testNonEmptyTypeList();
 	testEmptyTypeList();
 	testAppendToTypeList();
+	testFindInList();
 }
