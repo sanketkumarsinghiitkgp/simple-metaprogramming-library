@@ -34,10 +34,27 @@ void testFindInList() {
 	static_assert(find<FoundInTheMiddle, int>::value == 2, "testFindInList failed for FoundInTheMiddle");
 }
 
+void testEraseFromList() {
+	using EmptyList = type_list<>;
+	using OneLengthListContaining = type_list<int>;
+	using OneLengthListNotContaining = type_list<double>;
+	using FoundAtTheHead = type_list<int, double, float, char>;
+	using FoundAtTheEnd = type_list<double, float, char, int>;
+	using FoundInTheMiddle = type_list<double, float, int, char>;
+	using FoundInTheMiddleAfterErase = type_list<double, float, char>;
+	static_assert(length<typename erase<EmptyList, int>::type>::value == 0, "testFindInList failed for EmptyList");
+	static_assert(length<typename erase<OneLengthListContaining, int>::type>::value == 0, "testFindInList failed for OneLengthListContaining");
+	static_assert(length<typename erase<OneLengthListNotContaining, int>::type>::value == 1, "testFindInList failed for OneLengthListNotContaining");
+	static_assert(length<typename erase<FoundAtTheHead, int>::type>::value == 3, "testFindInList failed for FoundAtTheHead");
+	static_assert(length<typename erase<FoundAtTheEnd, int>::type>::value == 3, "testFindInList failed for FoundAtTheEnd");
+	static_assert(length<typename erase<FoundInTheMiddle, int>::type>::value == 3, "testFindInList failed for FoundInTheMiddle");
+	//TODO add test to see whether foundInTheMiddleAfterErase is the same as the output of typename erase.	
+}
 int main()
 {
 	testNonEmptyTypeList();
 	testEmptyTypeList();
 	testAppendToTypeList();
 	testFindInList();
+	testEraseFromList();
 }
