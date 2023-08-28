@@ -30,6 +30,15 @@ namespace sml
 	};
 
 	template <typename TypeList, typename T>
+	struct append_front;
+
+	template <typename... Ts, typename T>
+	struct append_front<type_list<Ts...>,T>
+	{
+		using type = type_list<T,Ts...>;
+	};
+
+	template <typename TypeList, typename T>
 	struct find
 	{
 		static constexpr int value = -1;
@@ -51,26 +60,23 @@ namespace sml
 
 	template <typename TypeList, typename T>
 	struct erase;
-
+	
 	template <typename T>
 	struct erase<type_list<>, T>
 	{
 		using type = type_list<>;
 	};
 
-
-	template <typename... Ts, typename Last>
-	struct erase<type_list<Ts..., Last>, Last>
+	template <typename... Ts, typename Head>
+	struct erase<type_list<Head, Ts...>, Head>
 	{
 		using type = type_list<Ts...>;
 	};
-	
-	// using tail instead of head since we have implemented push_back only (append is like push_back)
-	// so reconstructing the type_list after erasing is easier this way.
-	template <typename... Ts, typename Last, typename T>
-	struct erase<type_list<Ts..., Last>, T>
+
+	template <typename... Ts, typename Head, typename T>
+	struct erase<type_list<Head, Ts...>, T>
 	{
-		using head_list = typename erase<type_list<Ts...>, T>::type;
-		using type = typename append<head_list, Last>::type;
+		using tail_list = typename erase<type_list<Ts...>,T>::type;
+		using type = typename append_front<tail_list,Head>::type;
 	};
 }
