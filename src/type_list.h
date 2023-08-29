@@ -79,4 +79,16 @@ namespace sml
 		using tail_list = typename erase<type_list<Ts...>,T>::type;
 		using type = typename append_front<tail_list,Head>::type;
 	};
+
+	template <typename First, typename Second>
+	struct is_same
+	{
+		static constexpr bool value = false;
+	};
+
+	template <typename T>
+	struct is_same<T, T>
+	{
+		static constexpr bool value = true;
+	};
 }
