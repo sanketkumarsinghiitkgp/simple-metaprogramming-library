@@ -1,5 +1,6 @@
 #include "../src/type_list.h"
-#include <iostream>
+#include "../src/type_conditions_and_logic.h"
+
 using namespace sml;
 
 void testEmptyTypeList() {
@@ -41,37 +42,19 @@ void testEraseFromList() {
 	using FoundAtTheHead = type_list<int, double, float, char>;
 	using FoundAtTheEnd = type_list<double, float, char, int>;
 	using FoundInTheMiddle = type_list<double, float, int, char>;
-	using FoundInTheMiddleAfterErase = type_list<double, float, char>;
-	static_assert(length<typename erase<EmptyList, int>::type>::value == 0, "testFindInList failed for EmptyList");
-	static_assert(length<typename erase<OneLengthListContaining, int>::type>::value == 0, "testFindInList failed for OneLengthListContaining");
-	static_assert(length<typename erase<OneLengthListNotContaining, int>::type>::value == 1, "testFindInList failed for OneLengthListNotContaining");
-	static_assert(length<typename erase<FoundAtTheHead, int>::type>::value == 3, "testFindInList failed for FoundAtTheHead");
-	static_assert(length<typename erase<FoundAtTheEnd, int>::type>::value == 3, "testFindInList failed for FoundAtTheEnd");
-	static_assert(length<typename erase<FoundInTheMiddle, int>::type>::value == 3, "testFindInList failed for FoundInTheMiddle");
-	//TODO add test to see whether foundInTheMiddleAfterErase is the same as the output of typename erase.	
+	static_assert(is_same<typename erase<EmptyList, int>::type, type_list<>>::value, "testFindInList failed for EmptyList");
+	static_assert(is_same<typename erase<OneLengthListContaining, int>::type, type_list<>>::value, "testFindInList failed for OneLengthListContaining");
+	static_assert(is_same<typename erase<OneLengthListNotContaining, int>::type, type_list<double>>::value, "testFindInList failed for OneLengthListNotContaining");
+	static_assert(is_same<typename erase<FoundAtTheHead, int>::type, type_list<double, float, char>>::value, "testFindInList failed for FoundAtTheHead");
+	static_assert(is_same<typename erase<FoundAtTheEnd, int>::type, type_list<double, float, char>>::value, "testFindInList failed for FoundAtTheEnd");
+	static_assert(is_same<typename erase<FoundInTheMiddle, int>::type, type_list<double, float, char>>::value, "testFindInList failed for FoundInTheMiddle");
 }
 
-void testIsSame() {
-	static_assert(!is_same<float, double>::value, "float and double are the same.");
-	static_assert(!is_same<long, int>::value, "int and long are the same.");
-	static_assert(is_same<long long, long long int>::value, "long long and long long int aren't the same.");
-	static_assert(!is_same<int32_t, float>::value, "int32_t and float are the same.");
-	static_assert(!is_same<int64_t, float>::value, "int64_t and float are the same.");
-	static_assert(!is_same<long long, double>::value, "long long and double are the same.");
-	static_assert(!is_same<type_list<int>, type_list<double>>::value, "type_list<int> and type_list<double> are the same.");
-	static_assert(is_same<type_list<type_list<int>>, type_list<type_list<int>>>::value, "is_same<type_list<type_list<int>>, type_list<type_list<int>>>::value are not same.");
-	static_assert(!is_same<type_list<type_list<double>>, type_list<type_list<int>>>::value, "is_same<type_list<type_list<double>>, type_list<type_list<int>>>::value are not same.");
-	int a, b; double c;
-	static_assert(is_same<decltype(a), decltype(b)>::value, "decltype for int a and int b aren't the same.");
-	static_assert(!is_same<decltype(a), decltype(c)>::value, "decltype for int a and double c are the same.");
-}
-
-int main()
+void typeListTests()
 {
 	testNonEmptyTypeList();
 	testEmptyTypeList();
 	testAppendToTypeList();
 	testFindInList();
 	testEraseFromList();
-	testIsSame();
 }
